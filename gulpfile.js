@@ -1,9 +1,22 @@
 var gulp = require('gulp'),
-    imageMin = require('gulp-imagemin')
-    
-gulp.task('build-img', function(){
+    imageMin = require('gulp-imagemin'),
+    clean = require('gulp-clean');
 
-    gulp.src('src/img/**/*')
+gulp.task('copy', ['clean'], function(){
+
+    return gulp.src('src/**/*')
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('clean', function(){
+
+    return gulp.src('dist')
+        .pipe(clean());
+});
+    
+gulp.task('build-img', ['copy'], function(){
+
+    gulp.src('dist/img/**/*')
         .pipe(imageMin())
-        .pipe(gulp.dest('src/img'));
+        .pipe(gulp.dest('dist/img'));
 });
