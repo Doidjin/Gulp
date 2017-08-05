@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync'),
     jshint = require('gulp-jshint'),
     csslint = require('gulp-csslint'),
-    autoprefixer = require('gulp-autoprefixer');
+    autoprefixer = require('gulp-autoprefixer'),
+    less = require('gulp-less');
 
 gulp.task('default', ['copy'], function(){
     gulp.start('build-img', 'usemin');
@@ -62,9 +63,18 @@ gulp.task('server', function(){
     });
 
     gulpe.watch('src/**/*.css').on('change', function(event){
-    console.log('Listening ' + event.path);
-    gulp.src(event.path)
+        console.log('Listening ' + event.path);
+        gulp.src(event.path)
         .pipe(csslint())
         .pipe(csslint.reporter());
+    });
+
+    gulpe.watch('src/**/*.less').on('change', function(event){
+        var stream = gulp.src(event.path)
+        .pipe(less().on('error', function(error){
+            console.log('Erro na compilacao: ' + error.filename);
+            console.log(error.message);
+        }))
+        .pipe(gulp.dest('src/css'));
     });
 });
