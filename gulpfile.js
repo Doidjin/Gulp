@@ -6,7 +6,9 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     usemin = require('gulp-usemin'),
     cssmin = require('gulp-cssmin'),
-    browserSync = require('browser-sync');
+    browserSync = require('browser-sync'),
+    jshint = require('gulp-jshint'),
+    csslint = require('gulp-csslint');
 
 gulp.task('default', ['copy'], function(){
     gulp.start('build-img', 'usemin');
@@ -49,6 +51,19 @@ gulp.task('server', function(){
             */
         }
     });
-
     gulpe.watch('src/**/*').on('change', browserSync.reload);
+
+    gulpe.watch('src/**/*.js').on('change', function(event){
+        console.log('Listening ' + event.path);
+        gulp.src(event.path)
+            .pipe(jshint())
+            .pipe(jshint.reporter());
+    });
+
+    gulpe.watch('src/**/*.css').on('change', function(event){
+    console.log('Listening ' + event.path);
+    gulp.src(event.path)
+        .pipe(csslint())
+        .pipe(csslint.reporter());
+    });
 });
